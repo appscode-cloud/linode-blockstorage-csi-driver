@@ -6,17 +6,16 @@ import (
 	"os"
 	"os/exec"
 	"path"
-	"time"
 	"strings"
+	"time"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 const (
 	scriptDirectory = "scripts"
-	retryInterval = 5 * time.Second
-	retryTimout = 15 * time.Minute
-
+	retryInterval   = 5 * time.Second
+	retryTimout     = 15 * time.Minute
 )
 
 func RunScript(script string, args ...string) error {
@@ -43,7 +42,7 @@ func deleteInForeground() *metav1.DeleteOptions {
 }
 
 func ApplyManifest(commandName, manifest string) error {
-	args := []string{commandName, "-f", "-"}
+	args := []string{commandName, "--kubeconfig", KubeConfigFile, "-f", "-"}
 	cmd := exec.Command("kubectl", args...)
 	cmd.Stdin = strings.NewReader(manifest)
 	out, err := cmd.CombinedOutput()
